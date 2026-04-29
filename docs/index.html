@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>拼豆图纸生成器 · 免费网页版</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="card hero">
+      <h1>拼豆图纸生成器</h1>
+      <p>这是一个可免费分享的 GitHub Pages 版本。图片在<strong>浏览器本地处理</strong>，不需要服务器、不需要绑卡，适合公开分享给别人直接使用。</p>
+      <div class="badge-row">
+        <span class="badge">GitHub Pages</span>
+        <span class="badge">浏览器本地处理</span>
+        <span class="badge">免费分享</span>
+      </div>
+    </section>
+
+    <section class="card form-card">
+      <div class="form-grid">
+        <label>
+          <span>上传图片</span>
+          <input type="file" name="image" id="imageInput" accept="image/*" />
+        </label>
+        <label>
+          <span>横向颗数</span>
+          <input type="number" name="gridWidth" id="gridWidth" min="8" max="128" value="48" />
+        </label>
+        <label>
+          <span>最多使用颜色数</span>
+          <input type="number" name="maxColors" id="maxColors" min="2" max="144" value="24" />
+        </label>
+        <label>
+          <span>拼豆色卡</span>
+          <select name="paletteMode" id="paletteMode">
+            <option value="artkal_144">Artkal 144 色</option>
+            <option value="hama_70">Hama 70 色</option>
+            <option value="basic">基础 20 色</option>
+          </select>
+        </label>
+      </div>
+      <div class="button-row">
+        <button id="generateBtn">生成拼豆图纸</button>
+        <button id="downloadColorBtn" class="secondary" disabled>下载彩色图 PNG</button>
+        <button id="downloadNumberedBtn" class="secondary" disabled>下载编号图 PNG</button>
+      </div>
+      <p class="hint">提示：所有处理都在你的浏览器完成，图片不会上传到服务器。</p>
+    </section>
+
+    <section class="card result-card">
+      <div id="status" class="status">请先上传图片，然后点击“生成拼豆图纸”。</div>
+      <div class="meta" id="meta"></div>
+      <div class="preview-grid">
+        <div>
+          <h3>彩色预览</h3>
+          <canvas id="colorCanvas"></canvas>
+        </div>
+        <div>
+          <h3>编号预览</h3>
+          <canvas id="numberedCanvas"></canvas>
+        </div>
+      </div>
+      <div>
+        <h3>颜色统计</h3>
+        <table>
+          <thead>
+            <tr><th>编号</th><th>色号</th><th>颜色</th><th>颗数</th></tr>
+          </thead>
+          <tbody id="legendBody">
+            <tr><td colspan="4">生成后在这里显示</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
