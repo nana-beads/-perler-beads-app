@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>拼豆图纸生成器</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <section class="card hero">
+      <h1>拼豆图纸生成器</h1>
+      <p>上传图片，自动转成适合拼豆参考的网格图纸，并统计每种颜色所需颗数。增强版支持更精确的 Artkal / Hama 型号命名、颜色数限制、编号图纸和 PDF 导出。</p>
+      <div class="deploy-note">
+        <strong>公开网页版：</strong>当前版本已整理为可分享的公开网页版，可部署到 Render / Railway。
+      </div>
+    </section>
+
+    <section class="card">
+      <form action="/generate" method="post" enctype="multipart/form-data" class="form">
+        <label>
+          <span>上传图片</span>
+          <input type="file" name="image" accept="image/*" required />
+        </label>
+
+        <div class="grid2">
+          <label>
+            <span>横向颗数</span>
+            <input type="number" name="grid_width" min="8" max="128" value="48" />
+          </label>
+
+          <label>
+            <span>最多使用颜色数</span>
+            <input type="number" name="max_colors" min="2" max="144" value="24" />
+          </label>
+        </div>
+
+        <div class="grid2">
+          <label>
+            <span>拼豆色卡</span>
+            <select name="palette_mode">
+              <option value="artkal_144">Artkal 144 色（实际型号命名）</option>
+              <option value="hama_70">Hama 70 色（实际型号命名）</option>
+              <option value="basic">基础 20 色</option>
+            </select>
+          </label>
+
+          <label>
+            <span>输出编号图</span>
+            <select name="show_numbers">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit">生成拼豆图纸</button>
+      </form>
+    </section>
+
+    {% if result %}
+    <section class="card result">
+      <div class="result-head">
+        <h2>生成结果</h2>
+        <div class="actions">
+          <a href="{{ result.image_url }}" download>下载彩色图 PNG</a>
+          <a href="{{ result.numbered_image_url }}" download>下载编号图 PNG</a>
+          <a href="{{ result.pdf_url }}" download>下载 PDF</a>
+        </div>
+      </div>
+      <p>色卡：{{ result.palette_name }}（{{ result.palette_size }} 色）｜尺寸：{{ result.grid_width }} × {{ result.grid_height }} ｜ 总颗数：{{ result.total_beads }} ｜ 实际颜色数：{{ result.counts|length }}/{{ result.max_colors }}</p>
+
+      <h3>彩色预览</h3>
+      <img src="{{ result.image_url }}" alt="拼豆图纸" class="preview" />
+
+      <h3>编号预览</h3>
+      <img src="{{ result.numbered_image_url }}" alt="拼豆编号图纸" class="preview" />
+
+      <h3>颜色统计</h3>
+      <table>
+        <thead>
+          <tr><th>编号</th><th>色号</th><th>颜色</th><th>颗数</th></tr>
+        </thead>
+        <tbody>
+          {% for item in result.legend_items %}
+          <tr><td>{{ item.index }}</td><td>{{ item.code }}</td><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+  </main>
+</body>
+</html>
